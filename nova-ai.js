@@ -13,6 +13,7 @@
       this.serverURL = "";
       this.lastResponse = "";
       this.lastImageURL = "";
+      this.connectionStatus = "لم يتم اختبار الاتصال بعد";
     }
 
     getInfo() {
@@ -30,6 +31,16 @@
             arguments: {
               URL: { type: Scratch.ArgumentType.STRING, defaultValue: "https://your-server.example" }
             }
+          },
+          {
+            opcode: "testConnection",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "اختبر الاتصال بخادم Nova AI"
+          },
+          {
+            opcode: "connectionStatus",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "حالة الاتصال بخادم Nova AI"
           },
           {
             opcode: "askNova",
@@ -81,6 +92,21 @@
       }
 
       return response.json();
+    }
+
+    async testConnection() {
+      try {
+        const response = await fetch(this.serverURL + "/health");
+        if (!response.ok) throw new Error("HTTP " + response.status);
+        const data = await response.json();
+        this.connectionStatus = data.ok ? "متصل بخادم Nova AI" : "الخادم لا يؤكد جاهزيته";
+      } catch (error) {
+        this.connectionStatus = "فشل الاتصال: " + error.message;
+      }
+    }
+
+    connectionStatus() {
+      return this.connectionStatus;
     }
 
     async askNova(args) {
