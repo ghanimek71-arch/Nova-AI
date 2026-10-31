@@ -1,25 +1,28 @@
-# Nova AI — PenguinMod Extension
+# Nova AI 🌀 — إضافة PenguinMod
 
-Nova AI is a custom PenguinMod extension that adds AI blocks to projects.
+Nova AI إضافة مخصصة لمنصة PenguinMod تضيف بلوكات للتواصل مع الذكاء الاصطناعي وإنشاء الصور.
 
-## Planned first version
+## البلوكات الحالية
 
-- Configure the Nova AI service URL.
-- Send a prompt and receive an AI response.
-- Generate an image from a text prompt and receive its URL.
-- Read the latest response and generated image URL with reporter blocks.
+- ضبط عنوان خادم Nova AI.
+- التواصل مع الذكاء الاصطناعي عبر API وإرسال سؤال.
+- قراءة إجابة الذكاء الاصطناعي.
+- إنشاء صورة من وصف نصي.
+- قراءة رابط الصورة الناتجة.
 
-## Important security note
+## طريقة الاتصال بـ API
 
-The extension must not contain a private AI provider API key. Requests should go through a small backend service that keeps secrets on the server.
+تتصل الإضافة بخادم وسيط عبر HTTPS. يستقبل الخادم طلبات الإضافة، ثم يتواصل مع مزود الذكاء الاصطناعي باستخدام API.
 
-## Development
+نقاط النهاية المطلوبة:
 
-The extension entry point is `nova-ai.js`. Once hosted at a public HTTPS URL, load that URL in PenguinMod as a custom extension.
+- `POST /chat` يستقبل `{ "prompt": "..." }` ويعيد `{ "text": "..." }`.
+- `POST /images` يستقبل `{ "prompt": "..." }` ويعيد `{ "url": "https://..." }`.
 
-The backend endpoints expected by this starter extension are:
+## الأمان
 
-- `POST /chat` with JSON `{ "prompt": "..." }`, returning `{ "text": "..." }`
-- `POST /images` with JSON `{ "prompt": "..." }`, returning `{ "url": "https://..." }`
+لا تضع مفتاح API السري داخل ملف الإضافة أو مشروع PenguinMod؛ لأن المستخدمين يستطيعون رؤية ملفات JavaScript. يجب حفظ المفتاح في الخادم الخلفي.
 
-This repository starts with the extension scaffold; the backend and real AI provider integration are separate next steps.
+## ملف الإضافة
+
+الملف الرئيسي هو `nova-ai.js`. بعد استضافته على رابط HTTPS عام، يمكن تحميله في PenguinMod كإضافة مخصصة.
