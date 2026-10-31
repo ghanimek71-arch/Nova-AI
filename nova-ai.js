@@ -1,11 +1,11 @@
-// Nova AI — custom PenguinMod extension
-// Keep provider API keys on a backend server. Never put secret keys in this file.
+// Nova AI — إضافة مخصصة لمنصة PenguinMod
+// لا تضع مفاتيح API السرية هنا؛ احتفظ بها في الخادم الخلفي.
 
 (function (Scratch) {
   "use strict";
 
   if (!Scratch || !Scratch.extensions) {
-    throw new Error("Nova AI must be loaded as a PenguinMod/Scratch custom extension.");
+    throw new Error("يجب تحميل Nova AI كإضافة مخصصة في PenguinMod.");
   }
 
   class NovaAI {
@@ -26,7 +26,7 @@
           {
             opcode: "setServerURL",
             blockType: Scratch.BlockType.COMMAND,
-            text: "set Nova AI server URL to [URL]",
+            text: "اضبط عنوان خادم Nova AI على [URL]",
             arguments: {
               URL: { type: Scratch.ArgumentType.STRING, defaultValue: "https://your-server.example" }
             }
@@ -34,40 +34,40 @@
           {
             opcode: "askNova",
             blockType: Scratch.BlockType.COMMAND,
-            text: "ask Nova AI [PROMPT]",
+            text: "تواصل مع الذكاء الاصطناعي عبر API واسأله [PROMPT]",
             arguments: {
-              PROMPT: { type: Scratch.ArgumentType.STRING, defaultValue: "How do I make a game?" }
+              PROMPT: { type: Scratch.ArgumentType.STRING, defaultValue: "كيف أصنع لعبة؟" }
             }
           },
           {
             opcode: "lastResponse",
             blockType: Scratch.BlockType.REPORTER,
-            text: "Nova AI response"
+            text: "إجابة Nova AI"
           },
           {
             opcode: "generateImage",
             blockType: Scratch.BlockType.COMMAND,
-            text: "generate image from [PROMPT]",
+            text: "أنشئ صورة بالوصف [PROMPT]",
             arguments: {
-              PROMPT: { type: Scratch.ArgumentType.STRING, defaultValue: "a cute cartoon cat" }
+              PROMPT: { type: Scratch.ArgumentType.STRING, defaultValue: "قطة كرتونية لطيفة" }
             }
           },
           {
             opcode: "lastImageURL",
             blockType: Scratch.BlockType.REPORTER,
-            text: "generated image URL"
+            text: "رابط الصورة الناتجة"
           }
         ]
       };
     }
 
     setServerURL(args) {
-      this.serverURL = String(args.URL || "").trim().replace(/\/+$/, "");
+      this.serverURL = String(args.URL || "").trim().replace(/\\/+$/, "");
     }
 
     async postJSON(path, body) {
       if (!this.serverURL) {
-        throw new Error("Set the Nova AI server URL first.");
+        throw new Error("اضبط عنوان خادم Nova AI أولاً.");
       }
 
       const response = await fetch(this.serverURL + path, {
@@ -77,7 +77,7 @@
       });
 
       if (!response.ok) {
-        throw new Error("Nova AI server returned HTTP " + response.status);
+        throw new Error("خطأ من الخادم: HTTP " + response.status);
       }
 
       return response.json();
@@ -90,7 +90,7 @@
         });
         this.lastResponse = String(data.text || "");
       } catch (error) {
-        this.lastResponse = "Nova AI error: " + error.message;
+        this.lastResponse = "خطأ Nova AI: " + error.message;
       }
     }
 
@@ -105,11 +105,11 @@
         });
         this.lastImageURL = String(data.url || "");
         if (!this.lastImageURL) {
-          this.lastResponse = "The image service did not return an image URL.";
+          this.lastResponse = "خدمة الصور لم تُرجع رابطاً للصورة.";
         }
       } catch (error) {
         this.lastImageURL = "";
-        this.lastResponse = "Nova AI image error: " + error.message;
+        this.lastResponse = "خطأ إنشاء الصورة: " + error.message;
       }
     }
 
